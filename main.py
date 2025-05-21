@@ -7,11 +7,8 @@ from typing import Optional, Tuple, List, Dict
 import traceback
 import os
 
-# BOT_TOKEN = os.getenv("BOT_TOKEN")
-# CHANEL_ID = os.getenv("CHANEL_ID")
-
-BOT_TOKEN = "8174052403:AAFmaix3loe7-5GeafwNbc_GEJuGsefCnmo"
-CHANEL_ID = "-1002634613227"
+BOT_TOKEN = os.getenv("BOT_TOKEN")
+CHANEL_ID = os.getenv("CHANEL_ID")
 
 # Settings:
 # ///////////
