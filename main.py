@@ -30,7 +30,7 @@ interval_map = {
 
 DATA_REFRESH_INTERVAL = interval_map["1m"]
 TEXT_REFRESH_INTERVAL = interval_map["1m"]
-PRICE_REFRESH_INTERVAL = len(SYMBOLS)* 5
+PRICE_REFRESH_INTERVAL = len(SYMBOLS)* 2
 
 # Strayegy:
 WINDOW = 2_880 # minute
