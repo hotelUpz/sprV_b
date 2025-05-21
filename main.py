@@ -26,8 +26,9 @@ interval_map = {
     "10m": 600,
     "30m": 1800,
 }
-tfr = "10m"
-TEXT_REFRESH_INTERVAL = interval_map[tfr]
+
+DATA_REFRESH_INTERVAL = interval_map["1m"]
+TEXT_REFRESH_INTERVAL = interval_map["10m"]
 PRICE_REFRESH_INTERVAL = len(SYMBOLS)* 2
 
 # Strayegy:
@@ -345,11 +346,15 @@ class Main(DataFetcher):
                 else:
                     refresh_counter = 0
 
+                is_data_refresh_time = self.utils.is_new_interval(
+                    refresh_interval=DATA_REFRESH_INTERVAL
+                )
+
                 is_text_refresh_time = self.utils.is_new_interval(
                     refresh_interval=TEXT_REFRESH_INTERVAL
                 )
 
-                await self.refresh_data(session, is_text_refresh_time)
+                await self.refresh_data(session, is_data_refresh_time)
                 await self.msg_collector(is_text_refresh_time)
 
             except Exception as ex:

@@ -8,7 +8,7 @@ import io
 
 class Utils():
     def __init__(self, plot_window):  
-        self.last_fetch_timestamp = None
+        self.last_fetch_timestamps = {}
         self.plot_window = plot_window
     
     @staticmethod
@@ -87,13 +87,15 @@ class Utils():
             return (price_a / price_b - 1) * 100
         else:
             raise ValueError(f"Unknown method '{method}'. Choose from 'a', 'b', or 'ratio'.")
-
-    def is_new_interval(self, refresh_interval):
+        
+    def is_new_interval(self, refresh_interval: int) -> bool:
         now = datetime.now(timezone.utc)
         current_timestamp = int(now.timestamp())
         nearest_timestamp = (current_timestamp // refresh_interval) * refresh_interval
 
-        if self.last_fetch_timestamp is None or nearest_timestamp > self.last_fetch_timestamp:
-            self.last_fetch_timestamp = nearest_timestamp
+        last_timestamp = self.last_fetch_timestamps.get(refresh_interval)
+
+        if last_timestamp is None or nearest_timestamp > last_timestamp:
+            self.last_fetch_timestamps[refresh_interval] = nearest_timestamp
             return True
         return False
