@@ -1,6 +1,7 @@
 from datetime import datetime, timezone
 from textwrap import dedent
 import matplotlib.pyplot as plt
+import matplotlib.patches as patches
 # from scipy.interpolate import make_interp_spline
 from scipy.interpolate import PchipInterpolator  # монотонная интерполяция
 import numpy as np
@@ -32,38 +33,64 @@ class Utils():
             🧪 Dexscreener: https://dexscreener.com/{net_token}/{token_address}
         """)
 
-    def generate_plot_image(self, spread_data: list[tuple[str, float]], style: int = 1) -> bytes:
-        if (not spread_data) or (len(spread_data) < 4):
+    def generate_plot_image(self, spread_data: list[tuple[float, float, float]], style: int = 1) -> bytes:
+        if not spread_data or len(spread_data) < 4:
             return None
 
-        # Используем только последние N значений
         spreads = spread_data[-self.plot_window:]
 
-        plt.figure(figsize=(8, 4))
+        plt.figure(figsize=(10, 5))
         plt.axhline(0, color='gray', linestyle='--', linewidth=1)
 
-        if style == 0:
-            plt.plot(spreads, marker='o', linestyle='-', color='blue')
-
-        elif style == 1:
-            x = np.arange(len(spreads))
-            x_new = np.linspace(x.min(), x.max(), 100)  # 100 точек для плавности и стабильности
-            interpolator = PchipInterpolator(x, spreads)
+        if style == 1:
+            # Подставляем high, если spread >= 0, иначе low
+            y = [s[1] if s[0] >= 0 else s[2] for s in spreads]
+            x = np.arange(len(y))
+            x_new = np.linspace(x.min(), x.max(), 100)
+            interpolator = PchipInterpolator(x, y)
             y_smooth = interpolator(x_new)
             plt.plot(x_new, y_smooth, color='green')
 
         elif style == 2:
-            plt.bar(range(len(spreads)), spreads, color='purple')
+            ax = plt.gca()
+            width = 0.6
+            previous_close = spreads[0][0]
 
-        elif style == 3:
-            plt.scatter(range(len(spreads)), spreads, color='orange')
+            highs = []
+            lows = []
 
-        elif style == 4:
-            plt.plot(spreads, color='red')
-            plt.fill_between(range(len(spreads)), spreads, 0, alpha=0.3, color='red')
+            for i, (close, high, low) in enumerate(spreads):
+                open_price = previous_close
+                color = 'green' if close >= open_price else 'red'
+
+                lower = min(open_price, close)
+                upper = max(open_price, close)
+                height = upper - lower
+                rect = patches.Rectangle((i - width / 2, lower), width, height, color=color, alpha=0.9, zorder=2)
+                ax.add_patch(rect)
+
+                # Верхняя тень (от тела до high)
+                if high > upper:
+                    ax.plot([i, i], [upper, high], color=color, linewidth=2, zorder=1)
+
+                # Нижняя тень (от тела до low)
+                if low < lower:
+                    ax.plot([i, i], [low, lower], color=color, linewidth=2, zorder=1)
+
+                highs.append(high)
+                lows.append(low)
+                previous_close = close
+
+            ax.set_xlim(-1, len(spreads))
+            ax.set_xticks([])
+
+            y_min = min(lows)
+            y_max = max(highs)
+            y_range = y_max - y_min
+            ax.set_ylim(y_min - y_range * 0.05, y_max + y_range * 0.05)
 
         else:
-            raise ValueError("Недопустимый стиль. Используйте значение от 0 до 4.")
+            raise ValueError("Недопустимый стиль. Используйте значение от 1 до 2.")
 
         plt.title("История Spread (%)")
         plt.ylabel("Spread %")

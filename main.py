@@ -4,6 +4,7 @@ import asyncio
 import aiohttp
 # from collections import deque
 from typing import Optional, Tuple, List, Dict
+from textwrap import dedent
 import traceback
 import os
 
@@ -28,8 +29,8 @@ interval_map = {
 }
 
 DATA_REFRESH_INTERVAL = interval_map["1m"]
-TEXT_REFRESH_INTERVAL = interval_map["5m"]
-PRICE_REFRESH_INTERVAL = len(SYMBOLS)* 2
+TEXT_REFRESH_INTERVAL = interval_map["1m"]
+PRICE_REFRESH_INTERVAL = len(SYMBOLS)* 5
 
 # Strayegy:
 WINDOW = 2_880 # minute
@@ -91,28 +92,28 @@ class SignalProcessor:
     @staticmethod
     def hvh_spread_calc(spread_pct_data, last_spread):
         """
-        Простой HVH-индикатор для списка кортежей (timestamp, spread)
+        Простой HVH-индикатор:
         - spread_pct_data: list of tuples (timestamp, spread_value)
-        - WINDOW: количество последних значений для анализа
-        - DEVIATION: множитель отклонения (например, 0.89)
+        - last_spread: последнее значение спреда
         Returns: 1 (long), -1 (short), 0 (нейтрально)
         """
+        if not FIXED_THRESHOLD["is_active"] and len(spread_pct_data) >= WINDOW:
+            recent = spread_pct_data[-WINDOW:]
+            # Собираем все положительные и отрицательные значения из 0,1,3 позиций
+            values = [x[i] for x in recent for i in (0, 1, 3) if x and isinstance(x[i], (int, float))]
+            positives = [v for v in values if v > 0]
+            negatives = [v for v in values if v < 0]
 
-        if (not FIXED_THRESHOLD["is_active"]) and (len(spread_pct_data) >= WINDOW):
-            recent_spreads = spread_pct_data[-WINDOW:]
-            last_positive = [val for val in recent_spreads if val > 0]
-            last_negative = [val for val in recent_spreads if val < 0]
-            highest = max(last_positive, default=0) * DEVIATION
-            lowest = min(last_negative, default=0) * DEVIATION
+            highest_level = max(positives, default=0) * DEVIATION
+            lowest_level = min(negatives, default=0) * DEVIATION
         else:
-            highest = FIXED_THRESHOLD["val"]
-            lowest = -FIXED_THRESHOLD["val"]
+            val = FIXED_THRESHOLD["val"]
+            highest_level, lowest_level = val, -val
 
-        if lowest != 0 and last_spread < lowest:
+        if lowest_level != 0 and last_spread < lowest_level:
             return 1
-        elif highest != 0 and last_spread > highest:
+        if highest_level != 0 and last_spread > highest_level:
             return -1
-        
         return 0
     
     @staticmethod
@@ -156,12 +157,14 @@ class DataFetcher:
     def __init__(self):
         self.utils = Utils(PLOT_WINDOW)
         self.signals = SignalProcessor()
+        self.temporary_tik_data = {}
         self.data = {}
         self._init_symbol_data()
         self.pairs: List[Tuple] = self.get_dex_pairs(self.data)
 
     def _init_symbol_data(self):
         for symbol in SYMBOLS:
+            self.temporary_tik_data[symbol] = []
             self.data[symbol] = {
                 "spread_pct_data": [],
                 "mexc_price": None,
@@ -206,6 +209,11 @@ class DataFetcher:
 
                 try:
                     spread_pct = self.utils.calc_spread(mexc_price, dex_price, CALC_SPREAD_METHOD)
+                    if not spread_pct:
+                        print(f"Проблемы с расчетом спреда. Символ {symbol}")
+                        continue
+
+                    self.temporary_tik_data[symbol].append(spread_pct)
                     symbol_data.update({
                         "mexc_price": mexc_price,
                         "dex_price": dex_price,
@@ -213,10 +221,19 @@ class DataFetcher:
                     })
 
                     if is_spread_updated_time:
-                        symbol_data["spread_pct_data"].append(spread_pct)
+                        max_spread = max(self.temporary_tik_data[symbol])
+                        min_spread = min(self.temporary_tik_data[symbol])
+                        # debug:
+                        # text_print = dedent(f"""\                            
+                        #     💲 Cur Spread: {spread_pct}
+                        #     💲 High Spread: {max_spread}
+                        #     💲 Low Spread: {min_spread}
+                        # """)
+                        # print(text_print)
+                        symbol_data["spread_pct_data"].append((spread_pct, max_spread, min_spread))
                         if len(symbol_data["spread_pct_data"]) > HIST_SPREAD_LIMIT:
                             symbol_data["spread_pct_data"] = symbol_data["spread_pct_data"][-HIST_SPREAD_LIMIT:]
-
+                        self.temporary_tik_data[symbol] = []
 
                     msg = f"\U0001F4E2 [{symbol.replace("_USDT", "")}]: Spread: {spread_pct:.4f} %"
                     in_position_long, in_position_short = symbol_data["in_position_long"], symbol_data["in_position_short"]
@@ -241,7 +258,7 @@ class DataFetcher:
 class Main(DataFetcher):
     def __init__(self):
         super().__init__()  # ← Вызов конструктора родительского класса
-        self.notifier = TelegramNotifier(
+        self.notifier_q = TelegramNotifier(
             token=BOT_TOKEN,
             chat_ids=[CHANEL_ID]  # твой chat_id или список chat_id'ов
         )
@@ -262,7 +279,7 @@ class Main(DataFetcher):
         """Collects and sends messages based on symbol data and conditions."""
 
         async def send_signal(msg, plot_bytes=None, auto_delete=None, disable_notification=True):
-            await self.notifier.send(
+            await self.notifier_q.send(
                 msg,
                 photo_bytes=plot_bytes,
                 auto_delete=auto_delete,
@@ -292,12 +309,14 @@ class Main(DataFetcher):
                 is_instruction = bool(instruction_open) or bool(instruction_close)
 
                 if spread_pct is None:
+                    print("spread_pct is None")
                     continue
 
                 # Send regular update message if applicable
                 if is_text_refresh_time or is_instruction:
+                    # print("is_text_refresh_time or is_instruction")
                     # Generate plot once if needed
-                    plot_bytes = self.utils.generate_plot_image(spread_pct_data, style=1)
+                    plot_bytes = self.utils.generate_plot_image(spread_pct_data, style=2 if is_text_refresh_time else 1)
 
                 if is_text_refresh_time:
                     msg = symbol_data.get("msg")                    
@@ -346,12 +365,10 @@ class Main(DataFetcher):
                 else:
                     refresh_counter = 0
 
-                is_data_refresh_time = self.utils.is_new_interval(
-                    refresh_interval=DATA_REFRESH_INTERVAL
-                )
-
-                is_text_refresh_time = self.utils.is_new_interval(
-                    refresh_interval=TEXT_REFRESH_INTERVAL
+                is_data_refresh_time = self.utils.is_new_interval(DATA_REFRESH_INTERVAL)
+                is_text_refresh_time = (
+                    is_data_refresh_time if DATA_REFRESH_INTERVAL == TEXT_REFRESH_INTERVAL
+                    else self.utils.is_new_interval(TEXT_REFRESH_INTERVAL)
                 )
 
                 await self.refresh_data(session, is_data_refresh_time)
