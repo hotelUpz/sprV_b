@@ -43,6 +43,8 @@ class Utils():
         plt.axhline(0, color='gray', linestyle='--', linewidth=1)
 
         if style == 1:
+            if len(spread_data) < 4:
+                return
             # Подставляем high, если spread >= 0, иначе low
             y = [s[1] if s[0] >= 0 else s[2] for s in spreads]
             x = np.arange(len(y))
@@ -51,10 +53,7 @@ class Utils():
             y_smooth = interpolator(x_new)
             plt.plot(x_new, y_smooth, color='green')
 
-        elif style == 2:
-            if len(spread_data) < 4:
-                return
-            
+        elif style == 2:           
             ax = plt.gca()
             width = 0.6
             previous_close = spreads[0][0]
