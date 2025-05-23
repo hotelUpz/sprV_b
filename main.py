@@ -28,8 +28,8 @@ interval_map = {
     "30m": 1800,
 }
 
-DATA_REFRESH_INTERVAL = interval_map["1m"]
-TEXT_REFRESH_INTERVAL = interval_map["1m"]
+DATA_REFRESH_INTERVAL = interval_map["5m"]
+TEXT_REFRESH_INTERVAL = interval_map["5m"]
 PRICE_REFRESH_INTERVAL = len(SYMBOLS)* 2
 
 # Strayegy:
