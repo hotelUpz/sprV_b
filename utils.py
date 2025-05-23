@@ -34,7 +34,7 @@ class Utils():
         """)
 
     def generate_plot_image(self, spread_data: list[tuple[float, float, float]], style: int = 1) -> bytes:
-        if not spread_data:
+        if not spread_data or len(spread_data) < 4:
             return None
 
         spreads = spread_data[-self.plot_window:]
@@ -43,8 +43,6 @@ class Utils():
         plt.axhline(0, color='gray', linestyle='--', linewidth=1)
 
         if style == 1:
-            if len(spread_data) < 4:
-                return
             # Подставляем high, если spread >= 0, иначе low
             y = [s[1] if s[0] >= 0 else s[2] for s in spreads]
             x = np.arange(len(y))
