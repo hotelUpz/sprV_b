@@ -33,19 +33,19 @@ TEXT_REFRESH_INTERVAL = interval_map["1m"]
 PRICE_REFRESH_INTERVAL = len(SYMBOLS)* 2
 
 # Strayegy:
-WINDOW = 2_880 # minute
-HIST_SPREAD_LIMIT = 3_000
+WINDOW = 576 # minute
+HIST_SPREAD_LIMIT = 600
 DIRECTION_MODE = 3 # 1 -- Long only, 2 -- Short only, 3 -- Long + Short:
 DEVIATION = 0.89 # hvh
 FIXED_THRESHOLD = {
-    "is_active": True,
-    "val": 2.0 # %
+    "is_active": False,
+    "val": 2.5 # %
 }
 EXIT_THRESHOLD = 0.21
 CALC_SPREAD_METHOD = 'a'
 
 # Utils:
-PLOT_WINDOW = 2_880 # minute
+PLOT_WINDOW = 576 # minute
 MAX_RECONNECT_ATTEMPTS = 21
     
 class NetworkServices():

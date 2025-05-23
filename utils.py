@@ -34,7 +34,7 @@ class Utils():
         """)
 
     def generate_plot_image(self, spread_data: list[tuple[float, float, float]], style: int = 1) -> bytes:
-        if not spread_data or len(spread_data) < 4:
+        if not spread_data:
             return None
 
         spreads = spread_data[-self.plot_window:]
@@ -52,6 +52,9 @@ class Utils():
             plt.plot(x_new, y_smooth, color='green')
 
         elif style == 2:
+            if len(spread_data) < 4:
+                return
+            
             ax = plt.gca()
             width = 0.6
             previous_close = spreads[0][0]
