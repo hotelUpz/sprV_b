@@ -93,26 +93,30 @@ class SignalProcessor:
     def hvh_spread_calc(spread_pct_data, last_spread):
         """
         Простой HVH-индикатор:
-        - spread_pct_data: list of tuples (timestamp, spread_value)
+        - spread_pct_data: list of tuples (timestamp, spread_value, optional_extra)
         - last_spread: последнее значение спреда
         Returns: 1 (long), -1 (short), 0 (нейтрально)
         """
+        val = FIXED_THRESHOLD["val"]
         if not FIXED_THRESHOLD["is_active"] and len(spread_pct_data) >= WINDOW:
             recent = spread_pct_data[-WINDOW:]
-            # Собираем все положительные и отрицательные значения из 0,1,3 позиций
-            values = [x[i] for x in recent for i in (0, 1, 3) if x and isinstance(x[i], (int, float))]
+            values = {
+                x[i]
+                for x in recent
+                for i in (0, 1, 2)
+                if x and len(x) > i and isinstance(x[i], (int, float))
+            }
             positives = [v for v in values if v > 0]
             negatives = [v for v in values if v < 0]
 
-            highest_level = max(positives, default=0) * DEVIATION
-            lowest_level = min(negatives, default=0) * DEVIATION
-        else:
-            val = FIXED_THRESHOLD["val"]
+            highest_level = max(positives) * DEVIATION if positives else val
+            lowest_level = min(negatives) * DEVIATION if negatives else -val
+        else:            
             highest_level, lowest_level = val, -val
 
-        if lowest_level != 0 and last_spread < lowest_level:
+        if last_spread < lowest_level:
             return 1
-        if highest_level != 0 and last_spread > highest_level:
+        if last_spread > highest_level:
             return -1
         return 0
     
