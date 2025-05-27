@@ -4,19 +4,20 @@ import matplotlib.pyplot as plt
 import matplotlib.patches as patches
 from scipy.interpolate import PchipInterpolator  # монотонная интерполяция
 import numpy as np
-# import math
+from decimal import Decimal, getcontext
 import io
 
 PRECISION = 30
 
 def to_human_digit(value):
-    # if value == 0:
-    #     return "0.0"
+    getcontext().prec = PRECISION
+    dec_value = Decimal(str(value)).normalize()
+    # Убираем экспоненциальный формат
+    if dec_value == dec_value.to_integral():
+        return format(dec_value, 'f')
+    else:
+        return format(dec_value, 'f').rstrip('0').rstrip('.')
 
-    # abs_val = abs(value)
-    # int_digits = int(math.log10(abs_val)) + 1 if abs_val >= 1 else 0
-    # precision = max(0, 30 - int_digits)
-    return f"{value:.{PRECISION}f}".rstrip('0').rstrip('.')
 
 class Utils():
     def __init__(self, plot_window):  
