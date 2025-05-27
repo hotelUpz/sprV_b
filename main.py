@@ -15,9 +15,10 @@ CHANEL_ID = os.getenv("CHANEL_ID")
 # ///////////
 SYMBOLS_DATA = {
     "TIBBIR_USDT": ('base', '0x0c3b466104545efa096b8f944c1e524e1d0d4888'),
-    "ZERO_USDT": ('linea', '0x0040f36784dda0821e74ba67f86e084d70d67a3a')
+    "ZERO_USDT": ('linea', '0x0040f36784dda0821e74ba67f86e084d70d67a3a'),
+    "JAGER_USDT": ('bsc', '0x589e1c953bcb822a2094fd8c7cbbd84a7762fb04')
 }
-SYMBOLS = ["TIBBIR_USDT"]
+SYMBOLS = ["TIBBIR_USDT", "JAGER_USDT"]
 
 # Timing:
 interval_map = {
@@ -39,7 +40,7 @@ DIRECTION_MODE = 3 # 1 -- Long only, 2 -- Short only, 3 -- Long + Short:
 DEVIATION = 0.89 # hvh
 FIXED_THRESHOLD = {
     "is_active": False,
-    "val": 2.5 # %
+    "val": 3.0 # %
 }
 EXIT_THRESHOLD = 0.21
 CALC_SPREAD_METHOD = 'a'
