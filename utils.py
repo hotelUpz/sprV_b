@@ -2,10 +2,19 @@ from datetime import datetime, timezone
 from textwrap import dedent
 import matplotlib.pyplot as plt
 import matplotlib.patches as patches
-# from scipy.interpolate import make_interp_spline
 from scipy.interpolate import PchipInterpolator  # монотонная интерполяция
 import numpy as np
+import math
 import io
+
+def to_human_digit(value):
+    if value == 0:
+        return "0.0"
+
+    abs_val = abs(value)
+    int_digits = int(math.log10(abs_val)) + 1 if abs_val >= 1 else 0
+    precision = max(0, 30 - int_digits)
+    return f"{value:.{precision}f}".rstrip('0').rstrip('.')
 
 class Utils():
     def __init__(self, plot_window):  
@@ -27,8 +36,8 @@ class Utils():
         return dedent(f"""\
             {emoji} [{symbol.replace("_USDT", "")}][{action_msg}][{position_side}]
             ⚖️ Spread: {spread:.4f}%
-            💲 MEXC Price: {mexc_price}
-            💲 DEX Price: {dex_price}
+            💲 MEXC Price: {to_human_digit(mexc_price)}
+            💲 DEX Price: {to_human_digit(dex_price)}
             📊 MEXC: https://www.mexc.com/ru-RU/futures/{symbol}_USDT?type=linear_swap
             🧪 Dexscreener: https://dexscreener.com/{net_token}/{token_address}
         """)

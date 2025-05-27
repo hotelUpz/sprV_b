@@ -2,9 +2,7 @@ from api import get_dex_prices, get_mexc_prices, TelegramNotifier
 from utils import Utils
 import asyncio
 import aiohttp
-# from collections import deque
 from typing import Optional, Tuple, List, Dict
-from textwrap import dedent
 import traceback
 import os
 
@@ -13,9 +11,9 @@ CHANEL_ID = os.getenv("CHANEL_ID")
 
 # Settings:
 # ///////////
-SYMBOLS_DATA = {
+ADDRESSES_DATA = {
     "TIBBIR_USDT": ('base', '0x0c3b466104545efa096b8f944c1e524e1d0d4888'),
-    "ZERO_USDT": ('linea', '0x0040f36784dda0821e74ba67f86e084d70d67a3a'),
+    # "ZERO_USDT": ('linea', '0x0040f36784dda0821e74ba67f86e084d70d67a3a'),
     "JAGER_USDT": ('bsc', '0x589e1c953bcb822a2094fd8c7cbbd84a7762fb04')
 }
 SYMBOLS = ["TIBBIR_USDT", "JAGER_USDT"]
@@ -39,8 +37,16 @@ HIST_SPREAD_LIMIT = 600
 DIRECTION_MODE = 3 # 1 -- Long only, 2 -- Short only, 3 -- Long + Short:
 DEVIATION = 0.89 # hvh
 FIXED_THRESHOLD = {
-    "is_active": False,
-    "val": 3.0 # %
+    "TIBBIR_USDT": {
+        "is_active": False,
+        "long_val": -2.5, # %
+        "short_val": 3.0 # %
+    },
+    "JAGER_USDT": {
+        "is_active": False,
+        "long_val": -3.5, # %
+        "short_val": 4.0 # %
+    },
 }
 EXIT_THRESHOLD = 0.21
 CALC_SPREAD_METHOD = 'a'
@@ -48,7 +54,8 @@ CALC_SPREAD_METHOD = 'a'
 # Utils:
 PLOT_WINDOW = 576 # minute
 MAX_RECONNECT_ATTEMPTS = 21
-    
+
+        
 class NetworkServices():
     def __init__(self):
         self.session: Optional[aiohttp.ClientSession] = None
@@ -91,15 +98,16 @@ class NetworkServices():
     
 class SignalProcessor:
     @staticmethod
-    def hvh_spread_calc(spread_pct_data, last_spread):
+    def hvh_spread_calc(symbol, spread_pct_data, last_spread):
         """
         Простой HVH-индикатор:
         - spread_pct_data: list of tuples (timestamp, spread_value, optional_extra)
         - last_spread: последнее значение спреда
         Returns: 1 (long), -1 (short), 0 (нейтрально)
         """
-        val = FIXED_THRESHOLD["val"]
-        if not FIXED_THRESHOLD["is_active"] and len(spread_pct_data) >= WINDOW:
+        long_val = FIXED_THRESHOLD[symbol]["long_val"] # negative val
+        short_val = FIXED_THRESHOLD[symbol]["short_val"] # positive val
+        if not FIXED_THRESHOLD[symbol]["is_active"] and len(spread_pct_data) >= WINDOW:
             recent = spread_pct_data[-WINDOW:]
             values = {
                 x[i]
@@ -110,10 +118,10 @@ class SignalProcessor:
             positives = [v for v in values if v > 0]
             negatives = [v for v in values if v < 0]
 
-            highest_level = max(positives) * DEVIATION if positives else val
-            lowest_level = min(negatives) * DEVIATION if negatives else -val
+            highest_level = max(positives) * DEVIATION if positives else short_val
+            lowest_level = min(negatives) * DEVIATION if negatives else long_val
         else:            
-            highest_level, lowest_level = val, -val
+            highest_level, lowest_level = short_val, long_val
 
         if last_spread < lowest_level:
             return 1
@@ -127,6 +135,7 @@ class SignalProcessor:
 
     def signals_collector(
         self,
+        symbol: str,
         spread_data: list,
         current_spread: float,
         in_position_long: bool,
@@ -148,7 +157,7 @@ class SignalProcessor:
                 instructions_close.append(("SHORT", "is_closing"))
                 in_position_short = False
 
-        signal = self.hvh_spread_calc(spread_data, current_spread)
+        signal = self.hvh_spread_calc(symbol, spread_data, current_spread)
         if signal == 1 and not in_position_long:
             instructions_open.append(("LONG", "is_opening"))
             in_position_long = True
@@ -175,8 +184,8 @@ class DataFetcher:
                 "mexc_price": None,
                 "dex_price": None,
                 "spread_pct": None,
-                "net_token": SYMBOLS_DATA[symbol][0],
-                "token_address": SYMBOLS_DATA[symbol][1],
+                "net_token": ADDRESSES_DATA[symbol][0],
+                "token_address": ADDRESSES_DATA[symbol][1],
                 "msg": None,
                 "instruction_open": None,
                 "instruction_close": None,
@@ -197,7 +206,7 @@ class DataFetcher:
             mexc_prices = await get_mexc_prices(session, symbols)
             dex_prices = await get_dex_prices(session, pairs)
             return {
-                symbol: (mexc_prices.get(symbol), dex_prices.get((SYMBOLS_DATA[symbol][0], SYMBOLS_DATA[symbol][1])))
+                symbol: (mexc_prices.get(symbol), dex_prices.get((ADDRESSES_DATA[symbol][0], ADDRESSES_DATA[symbol][1])))
                 for symbol in symbols
             }
         except Exception as e:
@@ -243,7 +252,7 @@ class DataFetcher:
                     msg = f"\U0001F4E2 [{symbol.replace("_USDT", "")}]: Spread: {spread_pct:.4f} %"
                     in_position_long, in_position_short = symbol_data["in_position_long"], symbol_data["in_position_short"]
                     instr_open, instr_close, in_position_long_ren, in_position_short_ren = self.signals.signals_collector(
-                        symbol_data["spread_pct_data"], spread_pct, in_position_long, in_position_short
+                        symbol, symbol_data["spread_pct_data"], spread_pct, in_position_long, in_position_short
                     )
 
                     symbol_data.update({
@@ -342,6 +351,10 @@ class Main(DataFetcher):
 
             except Exception as ex:
                 print(f"[ERROR] msg_collector for symbol {symbol} failed: {ex}\n{traceback.format_exc()}")
+
+            finally:
+                if len(SYMBOLS) > 1:
+                    await asyncio.sleep(0.25)
 
     async def _run(self):
         await self.connector.initialize_session()
