@@ -38,12 +38,12 @@ DIRECTION_MODE = 3 # 1 -- Long only, 2 -- Short only, 3 -- Long + Short:
 DEVIATION = 0.89 # hvh
 FIXED_THRESHOLD = {
     "TIBBIR_USDT": {
-        "is_active": False,
+        "is_active": True,
         "long_val": -2.5, # %
         "short_val": 3.0 # %
     },
     "JAGER_USDT": {
-        "is_active": False,
+        "is_active": True,
         "long_val": -3.5, # %
         "short_val": 4.0 # %
     },

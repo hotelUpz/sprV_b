@@ -12,7 +12,6 @@ PRECISION = 30
 def to_human_digit(value):
     getcontext().prec = PRECISION
     dec_value = Decimal(str(value)).normalize()
-    # Убираем экспоненциальный формат
     if dec_value == dec_value.to_integral():
         return format(dec_value, 'f')
     else:
