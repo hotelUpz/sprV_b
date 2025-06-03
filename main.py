@@ -128,10 +128,13 @@ class SignalProcessor:
         if last_spread > highest_level:
             return -1
         return 0
-    
+        
     @staticmethod
-    def is_exit_signal(current_spread: float) -> bool:
-        return abs(current_spread) < EXIT_THRESHOLD
+    def is_exit_signal(current_spread: float, position_side: str) -> bool:
+        return {
+            "LONG": current_spread > -EXIT_THRESHOLD,
+            "SHORT": current_spread < EXIT_THRESHOLD
+        }.get(position_side, False)
 
     def signals_collector(
         self,
@@ -148,12 +151,13 @@ class SignalProcessor:
         """
         instructions_open = []
         instructions_close = []
-
-        if self.is_exit_signal(current_spread):
-            if in_position_long:
+        
+        if in_position_long:
+            if self.is_exit_signal(current_spread, "LONG"):
                 instructions_close.append(("LONG", "is_closing"))
                 in_position_long = False
-            if in_position_short:
+        if in_position_short:
+            if self.is_exit_signal(current_spread, "SHORT"):
                 instructions_close.append(("SHORT", "is_closing"))
                 in_position_short = False
 
