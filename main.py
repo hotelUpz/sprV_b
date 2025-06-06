@@ -16,7 +16,7 @@ ADDRESSES_DATA = {
     # "ZERO_USDT": ('linea', '0x0040f36784dda0821e74ba67f86e084d70d67a3a'),
     "JAGER_USDT": ('bsc', '0x589e1c953bcb822a2094fd8c7cbbd84a7762fb04')
 }
-SYMBOLS = ["TIBBIR_USDT", "JAGER_USDT"]
+SYMBOLS = ["TIBBIR_USDT"]
 
 # Timing:
 interval_map = {
@@ -29,7 +29,7 @@ interval_map = {
 
 DATA_REFRESH_INTERVAL = interval_map["5m"]
 TEXT_REFRESH_INTERVAL = interval_map["5m"]
-PRICE_REFRESH_INTERVAL = len(SYMBOLS)* 3
+PRICE_REFRESH_INTERVAL = len(SYMBOLS)* 2
 
 # Strayegy:
 WINDOW = 576 # minute
@@ -48,7 +48,7 @@ FIXED_THRESHOLD = {
         "short_val": 4.0 # %
     },
 }
-EXIT_THRESHOLD = 0.21
+EXIT_THRESHOLD = 0.5
 CALC_SPREAD_METHOD = 'a'
 
 # Utils:
