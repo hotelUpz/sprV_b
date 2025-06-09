@@ -40,7 +40,12 @@ DEVIATION = 0.89 # hvh
 FIXED_THRESHOLD = {
     "TIBBIR_USDT": {
         "is_active": True,
-        "long_val": -2.5, # %
+        "long_val": -3.0, # %
+        "short_val": 3.0 # %
+    },
+    "BUBB_USDT": {
+        "is_active": True,
+        "long_val": -3.0, # %
         "short_val": 3.0 # %
     },
     "JAGER_USDT": {
