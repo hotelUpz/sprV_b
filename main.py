@@ -14,9 +14,10 @@ CHANEL_ID = os.getenv("CHANEL_ID")
 ADDRESSES_DATA = {
     "TIBBIR_USDT": ('base', '0x0c3b466104545efa096b8f944c1e524e1d0d4888'),
     # "ZERO_USDT": ('linea', '0x0040f36784dda0821e74ba67f86e084d70d67a3a'),
-    "JAGER_USDT": ('bsc', '0x589e1c953bcb822a2094fd8c7cbbd84a7762fb04')
+    "JAGER_USDT": ('bsc', '0x589e1c953bcb822a2094fd8c7cbbd84a7762fb04'),
+    "BUBB_USDT": ('bsc','0xc8255e3fa0f4c6e6678807d663f9e2263e23a8e8'),
 }
-SYMBOLS = ["TIBBIR_USDT"]
+SYMBOLS = ["TIBBIR_USDT", "BUBB_USDT"]
 
 # Timing:
 interval_map = {
@@ -29,7 +30,7 @@ interval_map = {
 
 DATA_REFRESH_INTERVAL = interval_map["5m"]
 TEXT_REFRESH_INTERVAL = interval_map["5m"]
-PRICE_REFRESH_INTERVAL = len(SYMBOLS)* 2
+PRICE_REFRESH_INTERVAL = int(len(SYMBOLS)* 2.5)
 
 # Strayegy:
 WINDOW = 576 # minute
