@@ -13,12 +13,14 @@ CHANEL_ID = os.getenv("CHANEL_ID")
 # ///////////
 ADDRESSES_DATA = {
     "TIBBIR_USDT": ('base', '0x0c3b466104545efa096b8f944c1e524e1d0d4888'),
+    "BMT_USDT": ('solana', 'ctpkcqufppieczjesckvy1netmvqqmfk41eofjw1x4wg'),
+    "MIXIE_USDT": ('solana', '7bcauvcdnhtkckssmyyaoenkv6ixmg5bd6t8uqttuw65'),
     # "ZERO_USDT": ('linea', '0x0040f36784dda0821e74ba67f86e084d70d67a3a'),
     "JAGER_USDT": ('bsc', '0x589e1c953bcb822a2094fd8c7cbbd84a7762fb04'),
     "BUBB_USDT": ('bsc','0xc8255e3fa0f4c6e6678807d663f9e2263e23a8e8'),
     "VERSEWORLD_USDT": ('solana','6ltbm9gxmtmff1vy6jev5u3urmcsgtsuquhfnwwtmtli'),
 }
-SYMBOLS = ["TIBBIR_USDT", "BUBB_USDT", "VERSEWORLD_USDT"]
+SYMBOLS = ["TIBBIR_USDT", "BMT_USDT", "MIXIE_USDT"]
 
 # Timing:
 interval_map = {
@@ -43,6 +45,16 @@ FIXED_THRESHOLD = {
         "is_active": True,
         "long_val": -3.0, # %
         "short_val": 3.0 # %
+    },
+    "BMT_USDT": {
+        "is_active": True,
+        "long_val": -3.1, # %
+        "short_val": 3.3 # %
+    },
+    "MIXIE_USDT": {
+        "is_active": True,
+        "long_val": -3.1, # %
+        "short_val": 3.3 # %
     },
     "BUBB_USDT": {
         "is_active": True,
