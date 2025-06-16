@@ -53,7 +53,7 @@ FIXED_THRESHOLD = {
     },
     "MIXIE_USDT": {
         "is_active": True,
-        "long_val": -3.1, # %
+        "long_val": -4.1, # %
         "short_val": 3.3 # %
     },
     "BUBB_USDT": {
