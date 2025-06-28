@@ -11,8 +11,12 @@ CHANEL_ID = os.getenv("CHANEL_ID")
 
 # Settings:
 # ///////////
+
+
 ADDRESSES_DATA = {
     "TIBBIR_USDT": ('base', '0x0c3b466104545efa096b8f944c1e524e1d0d4888'),
+    "DADDY_USDT": ('solana', 'zcdaw3jpcqey8jyvxnvmqs2cu35cyddy4ot7v8ednhz'),
+    "AIC_USDT": ('bsc', '0x6eb39b37c02336623f3f9fd095d274b2d1e0bb96'),
     "BMT_USDT": ('solana', 'ctpkcqufppieczjesckvy1netmvqqmfk41eofjw1x4wg'),
     "MIXIE_USDT": ('solana', '7bcauvcdnhtkckssmyyaoenkv6ixmg5bd6t8uqttuw65'),
     # "ZERO_USDT": ('linea', '0x0040f36784dda0821e74ba67f86e084d70d67a3a'),
@@ -20,7 +24,7 @@ ADDRESSES_DATA = {
     "BUBB_USDT": ('bsc','0xc8255e3fa0f4c6e6678807d663f9e2263e23a8e8'),
     "VERSEWORLD_USDT": ('solana','6ltbm9gxmtmff1vy6jev5u3urmcsgtsuquhfnwwtmtli'),
 }
-SYMBOLS = ["TIBBIR_USDT", "BMT_USDT", "MIXIE_USDT"]
+SYMBOLS = ["DADDY_USDT", "AIC_USDT"]
 
 # Timing:
 interval_map = {
@@ -33,7 +37,7 @@ interval_map = {
 
 DATA_REFRESH_INTERVAL = interval_map["5m"]
 TEXT_REFRESH_INTERVAL = interval_map["5m"]
-PRICE_REFRESH_INTERVAL = int(len(SYMBOLS)* 2.5)
+PRICE_REFRESH_INTERVAL = int(len(SYMBOLS)* 1)
 
 # Strayegy:
 WINDOW = 288 # minute
@@ -54,7 +58,7 @@ FIXED_THRESHOLD = {
     "MIXIE_USDT": {
         "is_active": True,
         "long_val": -4.1, # %
-        "short_val": 3.3 # %
+        "short_val": 3.6 # %
     },
     "BUBB_USDT": {
         "is_active": True,
@@ -67,6 +71,16 @@ FIXED_THRESHOLD = {
         "short_val": 5.0 # %
     },
     "JAGER_USDT": {
+        "is_active": True,
+        "long_val": -3.5, # %
+        "short_val": 4.0 # %
+    },
+    "DADDY_USDT": {
+        "is_active": True,
+        "long_val": -3.0, # %
+        "short_val": 4.0 # %
+    },
+    "AIC_USDT": {
         "is_active": True,
         "long_val": -3.5, # %
         "short_val": 4.0 # %
