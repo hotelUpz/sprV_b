@@ -15,7 +15,8 @@ CHANEL_ID = os.getenv("CHANEL_ID")
 ADDRESSES_DATA = {
     "TIBBIR_USDT": ('base', '0x0c3b466104545efa096b8f944c1e524e1d0d4888'),
     "MGO_USDT": ('bsc', '0x83bd3ceadc3c19af0264157f4b70f0402c9bb3a8'),
-    "SPEC_USDT": ('ethereum', '0xacda7e4d5025ee4dd87d2ff75ecf6d69e921cee3'),
+    "DBR": ('solana', 'e5h5bxlranyjfhezvr3r2j6kgdq3fnx8spkssgyqyya8')
+    # "SPEC_USDT": ('ethereum', '0xacda7e4d5025ee4dd87d2ff75ecf6d69e921cee3'),
     # "DADDY_USDT": ('solana', 'zcdaw3jpcqey8jyvxnvmqs2cu35cyddy4ot7v8ednhz'),
     # "AIC_USDT": ('bsc', '0x6eb39b37c02336623f3f9fd095d274b2d1e0bb96'),
     # "BMT_USDT": ('solana', 'ctpkcqufppieczjesckvy1netmvqqmfk41eofjw1x4wg'),
@@ -25,7 +26,7 @@ ADDRESSES_DATA = {
     # "BUBB_USDT": ('bsc','0xc8255e3fa0f4c6e6678807d663f9e2263e23a8e8'),
     # "VERSEWORLD_USDT": ('solana','6ltbm9gxmtmff1vy6jev5u3urmcsgtsuquhfnwwtmtli'),
 }
-SYMBOLS = ["TIBBIR_USDT", "MGO_USDT", "SPEC_USDT"]
+SYMBOLS = ["TIBBIR_USDT", "MGO_USDT", "DBR_USDT"]
 
 # Timing:
 interval_map = {
@@ -88,10 +89,15 @@ FIXED_THRESHOLD = {
     },
     "MGO_USDT": {
         "is_active": True,
-        "long_val": -3.0, # %
-        "short_val": 4.0 # %
+        "long_val": -2.0, # %
+        "short_val": 1.5 # %
     },
     "SPEC_USDT": {
+        "is_active": True,
+        "long_val": -3.5, # %
+        "short_val": 4.0 # %
+    },
+    "DBR_USDT": {
         "is_active": True,
         "long_val": -3.5, # %
         "short_val": 4.0 # %
