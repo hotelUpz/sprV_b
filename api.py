@@ -36,6 +36,7 @@ async def get_dex_prices(session: aiohttp.ClientSession, pairs: list[tuple[str, 
     async def fetch_price(net_token, token_address):
         url = f"{BASE_URL_DEX}/latest/dex/pairs/{net_token}/{token_address}"
         try:
+            await asyncio.sleep(0.2)
             async with session.get(url) as response:
                 if response.status == 200:
                     data = await response.json()

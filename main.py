@@ -12,7 +12,6 @@ CHANEL_ID = os.getenv("CHANEL_ID")
 # Settings:
 # ///////////
 
-
 ADDRESSES_DATA = {
     "TIBBIR_USDT": ('base', '0x0c3b466104545efa096b8f944c1e524e1d0d4888'),
     "MGO_USDT": ('bsc', '0x83bd3ceadc3c19af0264157f4b70f0402c9bb3a8'),
@@ -39,7 +38,7 @@ interval_map = {
 
 DATA_REFRESH_INTERVAL = interval_map["5m"]
 TEXT_REFRESH_INTERVAL = interval_map["5m"]
-PRICE_REFRESH_INTERVAL = int(len(SYMBOLS)* 1)
+PRICE_REFRESH_INTERVAL = int(len(SYMBOLS)* 2)
 
 # Strayegy:
 WINDOW = 288 # minute
@@ -421,6 +420,8 @@ class Main(DataFetcher):
         session = self.connector.session
         
         while True:
+            refresh_counter += 1
+            check_session_counter += 1
             try:
                 if check_session_counter == 120:
                     check_session_counter = 0
@@ -432,28 +433,24 @@ class Main(DataFetcher):
                     
                     session = self.connector.session 
 
-                if refresh_counter < PRICE_REFRESH_INTERVAL:                                
-                    continue
-                else:
+                if refresh_counter >= PRICE_REFRESH_INTERVAL:                             
                     refresh_counter = 0
 
-                is_data_refresh_time = self.utils.is_new_interval(DATA_REFRESH_INTERVAL)
-                is_text_refresh_time = (
-                    is_data_refresh_time if DATA_REFRESH_INTERVAL == TEXT_REFRESH_INTERVAL
-                    else self.utils.is_new_interval(TEXT_REFRESH_INTERVAL)
-                )
+                    is_data_refresh_time = self.utils.is_new_interval(DATA_REFRESH_INTERVAL)
+                    is_text_refresh_time = (
+                        is_data_refresh_time if DATA_REFRESH_INTERVAL == TEXT_REFRESH_INTERVAL
+                        else self.utils.is_new_interval(TEXT_REFRESH_INTERVAL)
+                    )
 
-                await self.refresh_data(session, is_data_refresh_time)
-                await self.msg_collector(is_text_refresh_time)
+                    await self.refresh_data(session, is_data_refresh_time)
+                    await self.msg_collector(is_text_refresh_time)
 
             except Exception as ex:
                 print(f"[ERROR] Inner loop: {ex}")
                 traceback.print_exc()
-                raise
+                await asyncio.sleep(301)
 
             finally:
-                refresh_counter += 1
-                check_session_counter += 1
                 self.reset_data()      
                 await asyncio.sleep(1)
 
