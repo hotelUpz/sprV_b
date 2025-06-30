@@ -15,16 +15,18 @@ CHANEL_ID = os.getenv("CHANEL_ID")
 
 ADDRESSES_DATA = {
     "TIBBIR_USDT": ('base', '0x0c3b466104545efa096b8f944c1e524e1d0d4888'),
-    "DADDY_USDT": ('solana', 'zcdaw3jpcqey8jyvxnvmqs2cu35cyddy4ot7v8ednhz'),
-    "AIC_USDT": ('bsc', '0x6eb39b37c02336623f3f9fd095d274b2d1e0bb96'),
-    "BMT_USDT": ('solana', 'ctpkcqufppieczjesckvy1netmvqqmfk41eofjw1x4wg'),
-    "MIXIE_USDT": ('solana', '7bcauvcdnhtkckssmyyaoenkv6ixmg5bd6t8uqttuw65'),
+    "MGO_USDT": ('bsc', '0x83bd3ceadc3c19af0264157f4b70f0402c9bb3a8'),
+    "SPEC_USDT": ('ethereum', '0xacda7e4d5025ee4dd87d2ff75ecf6d69e921cee3'),
+    # "DADDY_USDT": ('solana', 'zcdaw3jpcqey8jyvxnvmqs2cu35cyddy4ot7v8ednhz'),
+    # "AIC_USDT": ('bsc', '0x6eb39b37c02336623f3f9fd095d274b2d1e0bb96'),
+    # "BMT_USDT": ('solana', 'ctpkcqufppieczjesckvy1netmvqqmfk41eofjw1x4wg'),
+    # "MIXIE_USDT": ('solana', '7bcauvcdnhtkckssmyyaoenkv6ixmg5bd6t8uqttuw65'),
     # "ZERO_USDT": ('linea', '0x0040f36784dda0821e74ba67f86e084d70d67a3a'),
-    "JAGER_USDT": ('bsc', '0x589e1c953bcb822a2094fd8c7cbbd84a7762fb04'),
-    "BUBB_USDT": ('bsc','0xc8255e3fa0f4c6e6678807d663f9e2263e23a8e8'),
-    "VERSEWORLD_USDT": ('solana','6ltbm9gxmtmff1vy6jev5u3urmcsgtsuquhfnwwtmtli'),
+    # "JAGER_USDT": ('bsc', '0x589e1c953bcb822a2094fd8c7cbbd84a7762fb04'),
+    # "BUBB_USDT": ('bsc','0xc8255e3fa0f4c6e6678807d663f9e2263e23a8e8'),
+    # "VERSEWORLD_USDT": ('solana','6ltbm9gxmtmff1vy6jev5u3urmcsgtsuquhfnwwtmtli'),
 }
-SYMBOLS = ["DADDY_USDT", "AIC_USDT"]
+SYMBOLS = ["TIBBIR_USDT", "MGO_USDT", "SPEC_USDT"]
 
 # Timing:
 interval_map = {
@@ -81,6 +83,16 @@ FIXED_THRESHOLD = {
         "short_val": 4.0 # %
     },
     "AIC_USDT": {
+        "is_active": True,
+        "long_val": -3.5, # %
+        "short_val": 4.0 # %
+    },
+    "MGO_USDT": {
+        "is_active": True,
+        "long_val": -3.0, # %
+        "short_val": 4.0 # %
+    },
+    "SPEC_USDT": {
         "is_active": True,
         "long_val": -3.5, # %
         "short_val": 4.0 # %
