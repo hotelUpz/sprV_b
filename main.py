@@ -15,7 +15,7 @@ CHANEL_ID = os.getenv("CHANEL_ID")
 ADDRESSES_DATA = {
     "TIBBIR_USDT": ('base', '0x0c3b466104545efa096b8f944c1e524e1d0d4888'),
     "MGO_USDT": ('bsc', '0x83bd3ceadc3c19af0264157f4b70f0402c9bb3a8'),
-    "DBR": ('solana', 'e5h5bxlranyjfhezvr3r2j6kgdq3fnx8spkssgyqyya8')
+    "DBR_USDT": ('solana', 'e5h5bxlranyjfhezvr3r2j6kgdq3fnx8spkssgyqyya8')
     # "SPEC_USDT": ('ethereum', '0xacda7e4d5025ee4dd87d2ff75ecf6d69e921cee3'),
     # "DADDY_USDT": ('solana', 'zcdaw3jpcqey8jyvxnvmqs2cu35cyddy4ot7v8ednhz'),
     # "AIC_USDT": ('bsc', '0x6eb39b37c02336623f3f9fd095d274b2d1e0bb96'),
