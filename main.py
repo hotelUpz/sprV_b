@@ -27,7 +27,7 @@ ADDRESSES_DATA = {
     # "BUBB_USDT": ('bsc','0xc8255e3fa0f4c6e6678807d663f9e2263e23a8e8'),
     # "VERSEWORLD_USDT": ('solana','6ltbm9gxmtmff1vy6jev5u3urmcsgtsuquhfnwwtmtli'),
 }
-SYMBOLS = ["TIBBIR_USDT", "IRISVIRTUAL_USDT"]
+SYMBOLS = ["IRISVIRTUAL_USDT"]
 
 # Timing:
 interval_map = {
@@ -105,11 +105,11 @@ FIXED_THRESHOLD = {
     },    
     "IRISVIRTUAL_USDT": {
         "is_active": True,
-        "long_val": -4.0, # %
-        "short_val": 4.0 # %
+        "long_val": -10.0, # %
+        "short_val": 10.0 # %
     },
 }
-EXIT_THRESHOLD = 0.5
+EXIT_THRESHOLD = 3.0
 CALC_SPREAD_METHOD = 'a'
 
 # Utils:
