@@ -27,7 +27,7 @@ ADDRESSES_DATA = {
     # "BUBB_USDT": ('bsc','0xc8255e3fa0f4c6e6678807d663f9e2263e23a8e8'),
     # "VERSEWORLD_USDT": ('solana','6ltbm9gxmtmff1vy6jev5u3urmcsgtsuquhfnwwtmtli'),
 }
-SYMBOLS = ["TIBBIR_USDT", "MGO_USDT", "IRISVIRTUAL_USDT"]
+SYMBOLS = ["TIBBIR_USDT", "IRISVIRTUAL_USDT"]
 
 # Timing:
 interval_map = {
