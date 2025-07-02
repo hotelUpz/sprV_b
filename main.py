@@ -105,8 +105,8 @@ FIXED_THRESHOLD = {
     },    
     "IRISVIRTUAL_USDT": {
         "is_active": True,
-        "long_val": -10.0, # %
-        "short_val": 10.0 # %
+        "long_val": -4.0, # %
+        "short_val": 4.0 # %
     },
 }
 EXIT_THRESHOLD = 0.5
