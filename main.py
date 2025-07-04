@@ -16,7 +16,8 @@ ADDRESSES_DATA = {
     "TIBBIR_USDT": ('base', '0x0c3b466104545efa096b8f944c1e524e1d0d4888'),
     "MGO_USDT": ('bsc', '0x83bd3ceadc3c19af0264157f4b70f0402c9bb3a8'),
     "IRISVIRTUAL_USDT": ('ethereum', '0x6662bccd7a333768e824b6a47e6765c8626b4353'),
-    "BR_USDT": ('bsc','0x380aadf63d84d3a434073f1d5d95f02fb23d5228')
+    "BR_USDT": ('bsc','0x380aadf63d84d3a434073f1d5d95f02fb23d5228'),
+    "CROSS_USDT": ('bsc', '0xe6e51ea572502dbdf8b40834d0619f9a9144d3a5'),
     # "DBR_USDT": ('solana', 'e5h5bxlranyjfhezvr3r2j6kgdq3fnx8spkssgyqyya8')
     # "SPEC_USDT": ('ethereum', '0xacda7e4d5025ee4dd87d2ff75ecf6d69e921cee3'),
     # "DADDY_USDT": ('solana', 'zcdaw3jpcqey8jyvxnvmqs2cu35cyddy4ot7v8ednhz'),
@@ -28,7 +29,7 @@ ADDRESSES_DATA = {
     # "BUBB_USDT": ('bsc','0xc8255e3fa0f4c6e6678807d663f9e2263e23a8e8'),
     # "VERSEWORLD_USDT": ('solana','6ltbm9gxmtmff1vy6jev5u3urmcsgtsuquhfnwwtmtli'),
 }
-SYMBOLS = ["TIBBIR_USDT", "IRISVIRTUAL_USDT", "BR_USDT"]
+SYMBOLS = ["CROSS_USDT", "IRISVIRTUAL_USDT", "BR_USDT"]
 
 # Timing:
 interval_map = {
@@ -114,6 +115,12 @@ FIXED_THRESHOLD = {
         "long_val": -5.0, # %
         "short_val": 5.0 # %
     },
+    "CROSS_USDT": {
+        "is_active": True,
+        "long_val": -5.0, # %
+        "short_val": 5.0 # %
+    },
+
 }
 EXIT_THRESHOLD = 0.5
 CALC_SPREAD_METHOD = 'a'
