@@ -28,8 +28,10 @@ ADDRESSES_DATA = {
     # "JAGER_USDT": ('bsc', '0x589e1c953bcb822a2094fd8c7cbbd84a7762fb04'),
     # "BUBB_USDT": ('bsc','0xc8255e3fa0f4c6e6678807d663f9e2263e23a8e8'),
     # "VERSEWORLD_USDT": ('solana','6ltbm9gxmtmff1vy6jev5u3urmcsgtsuquhfnwwtmtli'),
+    "GP_USDT": ('solana','9vnkzrrhajqjutgljcbo9ai4edmygp9dsg4tfz2hf251'),
+    "GOR_USDT": ('solana', 'h66r4cb3lrvezown6ejzxmvbjrzxmrzprt7z6amexunb'),
 }
-SYMBOLS = ["CROSS_USDT", "IRISVIRTUAL_USDT", "BR_USDT"]
+SYMBOLS = ["IRISVIRTUAL_USDT", "GP_USDT", "GOR_USDT"]
 
 # Timing:
 interval_map = {
@@ -119,6 +121,17 @@ FIXED_THRESHOLD = {
         "is_active": True,
         "long_val": -5.0, # %
         "short_val": 5.0 # %
+    },
+
+    "GP_USDT": {
+        "is_active": True,
+        "long_val": -3.0, # %
+        "short_val": 4.0 # %
+    },
+    "GOR_USDT": {
+        "is_active": True,
+        "long_val": -3.0, # %
+        "short_val": 4.0 # %
     },
 
 }
