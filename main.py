@@ -30,8 +30,9 @@ ADDRESSES_DATA = {
     # "VERSEWORLD_USDT": ('solana','6ltbm9gxmtmff1vy6jev5u3urmcsgtsuquhfnwwtmtli'),
     "GP_USDT": ('solana','9vnkzrrhajqjutgljcbo9ai4edmygp9dsg4tfz2hf251'),
     "GOR_USDT": ('solana', 'h66r4cb3lrvezown6ejzxmvbjrzxmrzprt7z6amexunb'),
+    "SWELL_USDT": ('ethereum', '0x35b88354c51613fe8857e02668c68e8c52161ba2'),
 }
-SYMBOLS = ["IRISVIRTUAL_USDT", "GP_USDT", "GOR_USDT"]
+SYMBOLS = ["IRISVIRTUAL_USDT", "GP_USDT", "GOR_USDT", "SWELL_USDT"]
 
 # Timing:
 interval_map = {
@@ -132,6 +133,11 @@ FIXED_THRESHOLD = {
         "is_active": True,
         "long_val": -3.0, # %
         "short_val": 4.0 # %
+    },
+    "SWELL_USDT": {
+        "is_active": True,
+        "long_val": -5.0, # %
+        "short_val": 5.0 # %
     },
 
 }
