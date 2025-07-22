@@ -45,7 +45,7 @@ interval_map = {
 
 DATA_REFRESH_INTERVAL = interval_map["5m"]
 TEXT_REFRESH_INTERVAL = interval_map["5m"]
-PRICE_REFRESH_INTERVAL = int(len(SYMBOLS)* 2)
+PRICE_REFRESH_INTERVAL = int(len(SYMBOLS)* 1)
 
 # Strayegy:
 WINDOW = 288 # minute
@@ -316,12 +316,13 @@ class DataFetcher:
                 symbol_data = self.data[symbol]
 
                 if not (mexc_price and dex_price):
+                    print(f"Проблемы с расчетом спреда. Символ {symbol}. Mexc: {mexc_price}, Dex: {dex_price}")
                     continue
 
                 try:
                     spread_pct = self.utils.calc_spread(mexc_price, dex_price, CALC_SPREAD_METHOD)
-                    if not spread_pct:
-                        print(f"Проблемы с расчетом спреда. Символ {symbol}")
+                    if spread_pct is None:
+                        print(f"-- spread is None -- [{symbol}]")
                         continue
 
                     self.temporary_tik_data[symbol].append(spread_pct)
