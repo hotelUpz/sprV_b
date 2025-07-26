@@ -13,7 +13,6 @@ CHANEL_ID = os.getenv("CHANEL_ID")
 # ///////////
 
 ADDRESSES_DATA = {
-    "TIBBIR_USDT": ('base', '0x0c3b466104545efa096b8f944c1e524e1d0d4888'),
     "MGO_USDT": ('bsc', '0x83bd3ceadc3c19af0264157f4b70f0402c9bb3a8'),
     "IRISVIRTUAL_USDT": ('ethereum', '0x6662bccd7a333768e824b6a47e6765c8626b4353'),
     "BR_USDT": ('bsc','0x380aadf63d84d3a434073f1d5d95f02fb23d5228'),
@@ -32,7 +31,7 @@ ADDRESSES_DATA = {
     "GOR_USDT": ('solana', 'h66r4cb3lrvezown6ejzxmvbjrzxmrzprt7z6amexunb'),
     "SWELL_USDT": ('ethereum', '0x35b88354c51613fe8857e02668c68e8c52161ba2'),
 }
-SYMBOLS = ["IRISVIRTUAL_USDT", "GP_USDT", "GOR_USDT", "SWELL_USDT"]
+SYMBOLS = ["IRISVIRTUAL_USDT"]
 
 # Timing:
 interval_map = {
@@ -53,11 +52,6 @@ HIST_SPREAD_LIMIT = 600
 DIRECTION_MODE = 3 # 1 -- Long only, 2 -- Short only, 3 -- Long + Short:
 DEVIATION = 0.89 # hvh
 FIXED_THRESHOLD = {
-    "TIBBIR_USDT": {
-        "is_active": True,
-        "long_val": -3.0, # %
-        "short_val": 3.0 # %
-    },
     "BMT_USDT": {
         "is_active": True,
         "long_val": -3.1, # %
